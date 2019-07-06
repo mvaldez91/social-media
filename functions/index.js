@@ -14,7 +14,7 @@ app.post('/scream',postOneScream );
 app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
 app.get('/scream/:screamId/like', FBAuth, likeOnScream);
 app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
-app.delete('/scream/:screamId', FBAuth, deleteScream);
+app.delete('/scream/:screamId', deleteScream);
 
 
 //Signup route
@@ -24,6 +24,5 @@ app.post('/login', login);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-
 
 exports.api = functions.https.onRequest(app);

@@ -170,5 +170,20 @@ exports.unlikeScream = async (req,res)=>{
 };
 
 exports.deleteScream = async (req,res)=>{
-
+    const document = db.doc(`/${COLLECTIONS.SCREAMS}/${req.params.screamId}`);
+    try {
+        const docResult = await document.get();
+        if (!docResult.exists){
+            return res.status(404).json({error: MESSAGES.scream.not_found});
+        }
+        if (docResult.data().userHandle !== req.user.handle){
+            return res.status(403).json({error: MESSAGES.auth.not_authorized});
+        }
+        await document.delete();
+        return res.json({message: 'Scream deleted successfully'});
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code});
+    }
 };
