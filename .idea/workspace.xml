@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9ecce6c6-7140-4c62-99e5-41ab855d2a10" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbSchema.js" beforeDir="false" afterPath="$PROJECT_DIR$/dbSchema.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/handlers/screams.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/handlers/screams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/handlers/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/handlers/users.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/messages.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/messages.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/util/FBAuth.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/util/FBAuth.js" afterDir="false" />
@@ -66,21 +66,22 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
+          <entry key="dummy" value="1" />
           <entry key="env" value="4" />
-          <entry key="js" value="3365" />
+          <entry key="js" value="5243" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="3365" />
-          <entry key="PLAIN_TEXT" value="4" />
+          <entry key="JavaScript" value="5243" />
+          <entry key="PLAIN_TEXT" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="env" value="1" />
           <entry key="gitignore" value="1" />
-          <entry key="js" value="9" />
+          <entry key="js" value="12" />
           <entry key="json" value="2" />
           <entry key="ts" value="1" />
         </counts>
@@ -88,7 +89,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="2" />
-          <entry key="JavaScript" value="9" />
+          <entry key="JavaScript" value="12" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="TypeScript" value="1" />
         </counts>
@@ -105,17 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functions/handlers/users.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4104">
-              <caret line="171" column="1" selection-start-line="171" selection-start-column="1" selection-end-line="171" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/functions/util/FBAuth.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="23" column="45" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
+            <state relative-caret-position="-2423">
+              <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -123,8 +115,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functions/messages.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+            <state relative-caret-position="68">
+              <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dbSchema.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-123">
+              <caret line="7" column="24" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -132,51 +133,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functions/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+            <state relative-caret-position="298">
+              <caret line="15" column="12" lean-forward="true" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functions/handlers/screams.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="81" column="34" selection-start-line="81" selection-start-column="34" selection-end-line="81" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/functions/util/config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/functions/.env">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="7" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-640" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dbSchema.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="15" column="48" lean-forward="true" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="48" />
+            <state relative-caret-position="-2266">
+              <caret line="32" column="21" lean-forward="true" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -193,15 +160,15 @@
         <option value="$PROJECT_DIR$/functions/admin.js" />
         <option value="$PROJECT_DIR$/functions/util/validation.js" />
         <option value="$PROJECT_DIR$/functions/util/admin.js" />
-        <option value="$PROJECT_DIR$/functions/handlers/users.js" />
         <option value="$PROJECT_DIR$/functions/util/validators.js" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/dbSchema.js" />
+        <option value="$PROJECT_DIR$/functions/util/config.js" />
+        <option value="$PROJECT_DIR$/functions/util/FBAuth.js" />
+        <option value="$PROJECT_DIR$/functions/handlers/users.js" />
         <option value="$PROJECT_DIR$/functions/messages.js" />
         <option value="$PROJECT_DIR$/functions/index.js" />
-        <option value="$PROJECT_DIR$/functions/util/config.js" />
         <option value="$PROJECT_DIR$/functions/handlers/screams.js" />
-        <option value="$PROJECT_DIR$/functions/util/FBAuth.js" />
       </list>
     </option>
   </component>
@@ -293,6 +260,16 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="screams.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" nameIsGenerated="true" path-to-js-file="screams.js" working-dir="$PROJECT_DIR$/functions/handlers">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Node.js.screams.js" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -305,12 +282,12 @@
       <updated>1561836972695</updated>
       <workItem from="1561836973883" duration="4049000" />
       <workItem from="1561999600013" duration="20187000" />
-      <workItem from="1562430752696" duration="6008000" />
+      <workItem from="1562430752696" duration="10548000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30244000" />
+    <option name="totallyTimeSpent" value="34784000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -322,7 +299,7 @@
       <window_info anchor="bottom" id="TypeScript" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.329718" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -386,29 +363,17 @@
     <entry file="file://$PROJECT_DIR$/package-lock.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/functions/node_modules/firebase/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-640" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dbSchema.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="15" column="48" lean-forward="true" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="48" />
+        <state relative-caret-position="240">
+          <caret line="5943" column="31" selection-start-line="5943" selection-start-column="31" selection-end-line="5943" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functions/messages.js">
+    <entry file="file://$PROJECT_DIR$/functions/util/FBAuth.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functions/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="7" selection-end-column="7" />
+        <state relative-caret-position="27">
+          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -419,38 +384,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functions/index.js">
+    <entry file="file://$PROJECT_DIR$/functions/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="7" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-487" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functions/messages.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
-          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+          <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functions/handlers/users.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4104">
-          <caret line="171" column="1" selection-start-line="171" selection-start-column="1" selection-end-line="171" selection-end-column="1" />
+        <state relative-caret-position="-2423">
+          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functions/node_modules/firebase/index.d.ts">
+    <entry file="file://$PROJECT_DIR$/dbSchema.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="5943" column="31" selection-start-line="5943" selection-start-column="31" selection-end-line="5943" selection-end-column="31" />
+        <state relative-caret-position="-123">
+          <caret line="7" column="24" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functions/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="15" column="12" lean-forward="true" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functions/handlers/screams.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="81" column="34" selection-start-line="81" selection-start-column="34" selection-end-line="81" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functions/util/FBAuth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="23" column="45" selection-start-line="23" selection-start-column="45" selection-end-line="23" selection-end-column="45" />
+        <state relative-caret-position="-2266">
+          <caret line="32" column="21" lean-forward="true" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
         </state>
       </provider>
     </entry>

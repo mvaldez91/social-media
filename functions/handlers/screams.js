@@ -1,44 +1,47 @@
 const {db} =  require('../util/admin');
 const {LANG} = require('../util/config');
-const MSGS = require('../messages')[LANG];
+const MESSAGES = require('../messages')[LANG];
 
 const COLLECTIONS = {
     SCREAMS: 'screams',
-    COMMENTS: 'comments'
+    COMMENTS: 'comments',
+    LIKES: 'likes'
 };
-exports.getAllScreams = (req,res)=>{
+exports.getAllScreams = async (req,res)=>{
 
-    db.collection(COLLECTIONS.SCREAMS)
-        .orderBy('createdAt', 'desc')
-        .get()
-        .then((r)=>{
-            let screams= [];
-            r.forEach((doc)=>{
-                screams.push(doc.data());
-            });
-            return res.json(screams);
+    try {
+        const screamsDocs = await db.collection(COLLECTIONS.SCREAMS).orderBy('createdAt', 'desc').get();
+        const preparedData = [];
+        screamsDocs.forEach(doc=>{
+            preparedData.push(doc.data());
         })
-        .catch(err=>{
-            console.error(err);
-            res.status(500).json({error: err.code })
-        });
+        // const preparedData = Object.keys(screamsDocs).map((elementId)=>{
+        //     return screamsDocs[elementId].data();
+        // });
+        return res.json(preparedData);
+    } catch(err){
+        console.error(err);
+        res.status(500).json({error: MESSAGES.generic.server_error});
+    }
 };
 
-exports.postOneScream = (req,res)=>{
+exports.postOneScream = async (req,res)=>{
     const newScream = {
         body: req.body.body,
         userHandle: req.user.handle,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        likeCount: 0,
+        commentCount: 0
     };
-    db.collection(COLLECTIONS.SCREAMS)
-      .add(newScream)
-      .then(doc=>{
-            res.json({message: `document ${doc.id} created successfully!`});
-        })
-        .catch(err=>{
-            console.error(err);
-            res.status(500).json({error: MSGS.generic.server_error});
-        })
+    try {
+        let doc = await db.collection(COLLECTIONS.SCREAMS).add(newScream);
+        newScream.screamId = doc.id;
+        res.json(newScream);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json({error: MESSAGES.generic.server_error});
+    }
 };
 
 exports.getScream = (req,res)=>{
@@ -47,7 +50,7 @@ exports.getScream = (req,res)=>{
         .get()
         .then((doc)=>{
             if (!doc.exists){
-                return res.status(404).json({error: MSGS.scream.not_found})
+                return res.status(404).json({error: MESSAGES.scream.not_found})
             }
             screamData = doc.data();
             screamData.screamId = doc.id;
@@ -72,7 +75,7 @@ exports.getScream = (req,res)=>{
 
 exports.commentOnScream = async (req,res)=>{
   if (req.body.body.trim()=== ''){
-      return res.status(400).json({error: MSGS.general.empty_field});
+      return res.status(400).json({error: MESSAGES.general.empty_field});
   }
   const newComment = {
     body: req.body.body,
@@ -82,12 +85,12 @@ exports.commentOnScream = async (req,res)=>{
       userImage: req.user.imageUrl
   };
 
-  console.log(newComment);
   try {
       let doc = await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).get();
       if (!doc.exists){
-          return res.status(404).json({error: MSGS.scream.not_found})
+          return res.status(404).json({error: MESSAGES.scream.not_found})
       }
+      await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).ref.update({commentCount: doc.data().commentCount + 1})
       await db.collection(`${COLLECTIONS.COMMENTS}`).add(newComment);
       res.json(newComment);
   }
@@ -95,6 +98,77 @@ exports.commentOnScream = async (req,res)=>{
     console.error(err);
       res.status(500).json({error: err.code});
   }
+};
 
+exports.likeOnScream = async (req,res)=>{
+
+    try {
+        const screamDocument = await db.doc(`/${COLLECTIONS.SCREAMS}/${req.params.screamId}`).get();
+        let screamData;
+
+        if (!screamDocument.exists){
+            return res.status(404).json({error: MESSAGES.scream.not_found})
+        }
+        const likeDocument =
+            await db.collection(COLLECTIONS.LIKES)
+                .where('userHandle', '==', req.user.handle)
+                .where('screamId', '==', req.params.screamId).limit(1).get();
+
+        screamData = screamDocument.data();
+        screamData.screamId = screamDocument.id;
+
+        if (!likeDocument.empty){
+            return res.status(400).json({error: MESSAGES.scream.already_liked});
+        }
+        await db.collection(`${COLLECTIONS.LIKES}`).add(
+            {   screamId: screamData.screamId,
+                userHandle: req.user.handle
+            });
+
+        screamData.likeCount ++;
+        await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).update({likeCount: screamData.likeCount});
+        return res.json(screamData);
+    }
+
+    catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code});
+    }
+
+};
+
+exports.unlikeScream = async (req,res)=>{
+    try {
+        const screamDocument = await db.doc(`/${COLLECTIONS.SCREAMS}/${req.params.screamId}`).get();
+        let screamData;
+
+        if (!screamDocument.exists){
+            return res.status(404).json({error: MESSAGES.scream.not_found})
+        }
+        const likeDocument =
+            await db.collection(COLLECTIONS.LIKES)
+                .where('userHandle', '==', req.user.handle)
+                .where('screamId', '==', req.params.screamId).limit(1).get();
+
+        screamData = screamDocument.data();
+        screamData.screamId = screamDocument.id;
+        console.log(likeDocument);
+        if (likeDocument.empty){
+            return res.status(400).json({error: MESSAGES.scream.already_liked});
+        }
+        await db.doc(`/${COLLECTIONS.LIKES}/${likeDocument.docs[0].id}`).delete();
+
+        screamData.likeCount --;
+        await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).update({likeCount: screamData.likeCount});
+        return res.json(screamData);
+    }
+
+    catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code});
+    }
+};
+
+exports.deleteScream = async (req,res)=>{
 
 };

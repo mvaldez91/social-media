@@ -1,5 +1,5 @@
 const {LANG} = require('../util/config');
-const MSGS = require('../messages')[LANG];
+const MESSAGES = require('../messages')[LANG];
 const {db,admin} = require('./admin');
 
 exports.FBAuth = (req,res,next)=>{
@@ -8,8 +8,8 @@ exports.FBAuth = (req,res,next)=>{
         idToken = req.headers.authorization.split('Bearer ')[1];
 
     }else{
-        console.error(MSGS.auth.no_token);
-        return res.status(403).json({error: MSGS.auth.not_authorized});
+        console.error(MESSAGES.auth.no_token);
+        return res.status(403).json({error: MESSAGES.auth.not_authorized});
     }
     admin.auth().verifyIdToken(idToken)
         .then(decodedToken=>{
@@ -27,7 +27,7 @@ exports.FBAuth = (req,res,next)=>{
             return next();
         })
         .catch(err=>{
-            console.error(MSGS.auth.error_token, err);
+            console.error(MESSAGES.auth.error_token, err);
             res.status(500).json({error: err.code});
         })
 };

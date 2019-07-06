@@ -1,6 +1,6 @@
 
 const {CONFIG,LANG} = require('../util/config');
-const MSGS = require('../messages')[LANG];
+const MESSAGES = require('../messages')[LANG];
 const {validateSignupData,validateLoginData} = require('../util/validators');
 
 const firebase = require('firebase');
@@ -27,7 +27,7 @@ exports.userSignUp =(req,res)=>{
     db.doc(`/${COLLECTION}/${newUser.handle}`).get()
         .then((doc)=>{
             if(doc.exists){
-                return res.status(400).json({handle: MSGS.user.handle_taken});
+                return res.status(400).json({handle: MESSAGES.user.handle_taken});
             }
             else{
 
@@ -54,7 +54,7 @@ exports.userSignUp =(req,res)=>{
         .catch((err)=>{
             console.error(err);
             if (err.code === 'auth/email-already-in-use'){
-                return res.status(400).json({email: MSGS.user.email_has_used});
+                return res.status(400).json({email: MESSAGES.user.email_has_used});
             }
             else{
                 return res.status(500).json({error: err.code});
@@ -98,7 +98,7 @@ exports.addUserDetails =(req, res)=>{
     db.doc(`/${COLLECTION}/${req.user.handle}`)
         .update(userDetails)
         .then(()=>{
-            return res.json({message: MSGS.user.details_updated})
+            return res.json({message: MESSAGES.user.details_updated})
         })
         .catch((err)=>{
             console.error(err);
@@ -141,7 +141,7 @@ exports.uploadImage = (req,res)=>{
 
   busboy.on('file',(fieldname, file, fileName, encoding, mimetype)=>{
       if (mimetype !== 'image/jpeg' && mimetype !=='image/png'){
-          return res.status(400).json({error: MSGS.user.wrong_file_type});
+          return res.status(400).json({error: MESSAGES.user.wrong_file_type});
       }
      const imageExtension =fileName.split('.')[fileName.split('.').length - 1];
      imageFileName = `${Math.round(Math.random() * 10000000)}.${imageExtension}`;
@@ -166,7 +166,7 @@ exports.uploadImage = (req,res)=>{
         const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${CONFIG.storageBucket}/o/${imageFileName}?alt=media`;
         return db.doc(`/${COLLECTION}/${req.user.handle}`).update({imageUrl});
       }).then(()=>{
-          return res.json({message: MSGS.user.image_uploaded});
+          return res.json({message: MESSAGES.user.image_uploaded});
       }).catch((err)=>{
           console.error(err);
           return res.status(500).json({error: err.code});
