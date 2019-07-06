@@ -1,9 +1,10 @@
 const LANGUAGE = 'EN';
 const functions = require('firebase-functions');
-
 const MSGS = require('./messages')[LANGUAGE];
 
-const {getAllScreams, postOneScream} = require('./handlers/screams');
+require('dotenv').config();
+
+const {getAllScreams, postOneScream,getScream, commentOnScream} = require('./handlers/screams');
 const {userSignUp, login, uploadImage, addUserDetails,getAuthenticatedUser} = require('./handlers/users');
 const {FBAuth} = require('./util/FBAuth');
 
@@ -11,18 +12,22 @@ const routes = {
     SCREAM: 'scream',
     SIGNUP: 'signup',
     LOGIN: 'login',
-    USER: 'user'
+    USER: 'user',
+    COMMENT: 'comment'
 };
 
 const subRoutes = {
-    IMAGE: 'image'
+    IMAGE: 'image',
+
 };
 
 const app = require('express')();
 
 //screams routes
 app.get(`/${routes.SCREAM}`, FBAuth, getAllScreams);
+app.get(`/${routes.SCREAM}/:screamId`, FBAuth, getScream);
 app.post(`/${routes.SCREAM}`,postOneScream );
+app.post(`/${routes.SCREAM}/:screamId/${routes.COMMENT}`, FBAuth, commentOnScream);
 
 //Signup route
 app.post(`/${routes.SIGNUP}`, userSignUp);

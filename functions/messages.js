@@ -1,7 +1,7 @@
 const MESSAGES = {
     EN: {
       scream:{
-
+        not_found: 'Scream not found'
       },
         user:{
           empty_field: 'Must not be empty',

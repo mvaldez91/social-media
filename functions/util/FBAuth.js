@@ -21,7 +21,9 @@ exports.FBAuth = (req,res,next)=>{
                 .get()
         })
         .then((data)=>{
+            console.log(data.docs[0].data());
             req.user.handle = data.docs[0].data().handle;
+            req.user.imageUrl = data.docs[0].data().imageUrl;
             return next();
         })
         .catch(err=>{
