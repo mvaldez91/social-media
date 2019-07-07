@@ -7,6 +7,8 @@ const COLLECTIONS = {
     COMMENTS: 'comments',
     LIKES: 'likes'
 };
+
+exports.COLLECTIONS  = COLLECTIONS;
 exports.getAllScreams = async (req,res)=>{
 
     try {
@@ -14,10 +16,7 @@ exports.getAllScreams = async (req,res)=>{
         const preparedData = [];
         screamsDocs.forEach(doc=>{
             preparedData.push(doc.data());
-        })
-        // const preparedData = Object.keys(screamsDocs).map((elementId)=>{
-        //     return screamsDocs[elementId].data();
-        // });
+        });
         return res.json(preparedData);
     } catch(err){
         console.error(err);
@@ -91,7 +90,7 @@ exports.commentOnScream = async (req,res)=>{
       if (!doc.exists){
           return res.status(404).json({error: MESSAGES.scream.not_found})
       }
-      await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).ref.update({commentCount: doc.data().commentCount + 1})
+      await db.doc(`${COLLECTIONS.SCREAMS}/${req.params.screamId}`).update({commentCount: doc.data().commentCount + 1})
       await db.collection(`${COLLECTIONS.COMMENTS}`).add(newComment);
       res.json(newComment);
   }

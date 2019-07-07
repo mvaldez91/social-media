@@ -8,7 +8,13 @@ firebase.initializeApp(CONFIG);
 const {db,admin}  = require('../util/admin');
 const {isEmpty} = require('../util/validators');
 
-const COLLECTION = 'users';
+const COLLECTIONS = {
+    USERS: 'users',
+    LIKES: 'likes',
+    COMMENTS: 'comments',
+    NOTIFICATIONS: 'notifications',
+    SCREAMS: 'screams'
+};
 
 exports.userSignUp =(req,res)=>{
     const newUser = {
@@ -24,7 +30,7 @@ exports.userSignUp =(req,res)=>{
     let userId = '';
     let tokenRetrieved = '';
 
-    db.doc(`/${COLLECTION}/${newUser.handle}`).get()
+    db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).get()
         .then((doc)=>{
             if(doc.exists){
                 return res.status(400).json({handle: MESSAGES.user.handle_taken});
@@ -46,7 +52,7 @@ exports.userSignUp =(req,res)=>{
                 imageUrl: 'https://firebasestorage.googleapis.com/v0/b/react-social-network-2e7aa.appspot.com/o/no_image.jpg?alt=media',
                 userId
             };
-            return db.doc(`/${COLLECTION}/${newUser.handle}`).set(userCredentials);
+            return db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).set(userCredentials);
         })
         .then(()=>{
             return res.status(201).json({token: tokenRetrieved})
@@ -95,7 +101,7 @@ exports.login = (req,res)=>{
 exports.addUserDetails =(req, res)=>{
     let userDetails = reduceUserDetails(req.body);
 
-    db.doc(`/${COLLECTION}/${req.user.handle}`)
+    db.doc(`/${COLLECTIONS.USERS}/${req.user.handle}`)
         .update(userDetails)
         .then(()=>{
             return res.json({message: MESSAGES.user.details_updated})
@@ -106,26 +112,37 @@ exports.addUserDetails =(req, res)=>{
         })
 };
 
-exports.getAuthenticatedUser = (req,res)=>{
+exports.getAuthenticatedUser = async (req,res)=>{
     let userData = {};
-    db.doc(`${COLLECTION}/${req.user.handle}`).get()
-        .then((doc)=>{
-            if (doc.exists){
-                userData.credentials = doc.data();
-                return db.collection('likes').where('userHandle', '==', req.user.handle).get()
-            }
-        })
-        .then((data)=>{
-            userData.likes = [];
-            data.forEach(doc=>{
-                userData.likes.push(doc.data());
-            });
-            return res.json(userData);
-        })
-        .catch((err)=>{
-            console.error(err);
-            return res.status(500).json({error: err.code})
-        })
+
+    try {
+        let userDoc = await db.doc(`${COLLECTIONS.USERS}/${req.user.handle}`).get();
+        let likesCollection, notificationsCollection;
+
+        if (!userDoc.exists){
+            return;
+        }
+        userData.credentials = userDoc.data();
+        likesCollection = await db.collection(`${COLLECTIONS.LIKES}`).where('userHandle', '==', req.user.handle).get();
+        console.log(likesCollection);
+        userData.likes = [];
+        likesCollection.forEach(doc=>{
+            userData.likes.push(doc.data());
+        });
+        notificationsCollection = await db.collection(`${COLLECTIONS.NOTIFICATIONS}`).where('recipient', '==', req.user.handle).orderBy('createdAt', 'desc').limit(10).get();
+        userData.notifications = [];
+        let element = {};
+        notificationsCollection.forEach(doc=>{
+            element = doc.data();
+            element.notificationId = doc.id;
+            userData.notifications.push(element);
+        });
+        return res.json(userData);
+
+    } catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code})
+    }
 };
 
 exports.uploadImage = (req,res)=>{
@@ -164,7 +181,7 @@ exports.uploadImage = (req,res)=>{
       })
       .then(()=>{
         const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${CONFIG.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/${COLLECTION}/${req.user.handle}`).update({imageUrl});
+        return db.doc(`/${COLLECTIONS.USERS}/${req.user.handle}`).update({imageUrl});
       }).then(()=>{
           return res.json({message: MESSAGES.user.image_uploaded});
       }).catch((err)=>{
@@ -175,6 +192,29 @@ exports.uploadImage = (req,res)=>{
     busboy.end(req.rawBody)
 };
 
+exports.getUserDetails = async (req,res)=>{
+    let userData= {};
+    try {
+        let userDoc = await db.doc(`/${COLLECTIONS.USERS}/${req.params.handle}`).get();
+        let userScreams ;
+        if (userDoc.exists){
+            userData.user = userDoc.data();
+        }
+        userScreams = await db.collection(COLLECTIONS.SCREAMS).where('userHandle', '==', req.params.handle).orderBy('createdAt', 'desc').get();
+        userData.screams = [];
+        let docElement = {};
+        userScreams.forEach(doc=>{
+            docElement = doc.data();
+            docElement.screamId = doc.id;
+            userData.screams.push(docElement);
+        });
+        return res.json(userData);
+
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code});
+    }
+};
 
 const reduceUserDetails = (data)=>{
     let userDetails = {};
