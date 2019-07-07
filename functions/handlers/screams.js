@@ -44,33 +44,34 @@ exports.postOneScream = async (req,res)=>{
     }
 };
 
-exports.getScream = (req,res)=>{
+exports.getScream = async (req,res)=>{
     let screamData = {};
-    db.doc(`/${COLLECTIONS.SCREAMS}/${req.params.screamId}`)
-        .get()
-        .then((doc)=>{
-            if (!doc.exists){
-                return res.status(404).json({error: MESSAGES.scream.not_found})
-            }
-            screamData = doc.data();
-            screamData.screamId = doc.id;
-            return db
-                .collection(COLLECTIONS.COMMENTS)
-                .orderBy('createdAt', 'desc')
-                .where('screamId', '==', req.params.screamId)
-                .get();
-        })
-        .then(data=>{
-            screamData.comments = [];
-            data.forEach(doc=>{
-                screamData.comments.push(doc.data());
-            });
-            return res.json(screamData);
-        })
-        .catch(err=>{
-            console.error(err);
-            res.status(500).json({error: err.code});
+    let docDefinition = db.doc(`/${COLLECTIONS.SCREAMS}/${req.params.screamId}`);
+
+    try {
+        let doc = await docDefinition.get();
+        let commentsCollection;
+        if (!doc.exists){
+            return res.status(404).json({error: MESSAGES.scream.not_found});
+        }
+        screamData = doc.data();
+        screamData.screamId = doc.id;
+        commentsCollection = db
+            .collection(COLLECTIONS.COMMENTS)
+            .orderBy('createdAt', 'desc')
+            .where('screamId', '==', req.params.screamId)
+            .get();
+        screamData.comments = [];
+
+        commentsCollection.forEach(doc=>{
+            screamData.comments.push(doc.data());
         });
+        return res.json(screamData);
+    }
+    catch(err){
+        console.error(err);
+        res.status(500).json({error: err.code});
+    }
 };
 
 exports.commentOnScream = async (req,res)=>{
