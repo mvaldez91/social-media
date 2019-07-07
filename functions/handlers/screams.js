@@ -5,7 +5,8 @@ const MESSAGES = require('../messages')[LANG];
 const COLLECTIONS = {
     SCREAMS: 'screams',
     COMMENTS: 'comments',
-    LIKES: 'likes'
+    LIKES: 'likes',
+    NOTIFICATIONS: 'notifications'
 };
 
 exports.COLLECTIONS  = COLLECTIONS;
@@ -30,7 +31,8 @@ exports.postOneScream = async (req,res)=>{
         userHandle: req.user.handle,
         createdAt: new Date().toISOString(),
         likeCount: 0,
-        commentCount: 0
+        commentCount: 0,
+        userImage: req.user.imageUrl
     };
     try {
         let doc = await db.collection(COLLECTIONS.SCREAMS).add(newScream);
@@ -55,7 +57,7 @@ exports.getScream = async (req,res)=>{
         }
         screamData = doc.data();
         screamData.screamId = doc.id;
-        commentsCollection = db
+        commentsCollection = await db
             .collection(COLLECTIONS.COMMENTS)
             .orderBy('createdAt', 'desc')
             .where('screamId', '==', req.params.screamId)

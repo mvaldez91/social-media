@@ -16,7 +16,7 @@ const COLLECTIONS = {
     SCREAMS: 'screams'
 };
 
-exports.userSignUp =(req,res)=>{
+exports.userSignUp = async (req,res)=>{
     const newUser = {
         email: req.body.email,
         password: req.body.password,
@@ -24,78 +24,66 @@ exports.userSignUp =(req,res)=>{
         handle: req.body.handle,
     };
     const {valid, errors} = validateSignupData(newUser);
+    let firebaseUserResult, tokenResult;
     if (!valid){
         return res.status(400).json(errors);
     }
     let userId = '';
-    let tokenRetrieved = '';
 
-    db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).get()
-        .then((doc)=>{
-            if(doc.exists){
-                return res.status(400).json({handle: MESSAGES.user.handle_taken});
-            }
-            else{
-
-                return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
-            }
-        }).then((data=>{
-        userId = data.user.uid;
-        return data.user.getIdToken()
-    }))
-        .then(token=>{
-            tokenRetrieved = token;
-            const userCredentials = {
-                handle: newUser.handle,
-                email: newUser.email,
-                createdAt: new Date().toISOString(),
-                imageUrl: 'https://firebasestorage.googleapis.com/v0/b/react-social-network-2e7aa.appspot.com/o/no_image.jpg?alt=media',
-                userId
-            };
-            return db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).set(userCredentials);
-        })
-        .then(()=>{
-            return res.status(201).json({token: tokenRetrieved})
-        })
-        .catch((err)=>{
-            console.error(err);
-            if (err.code === 'auth/email-already-in-use'){
-                return res.status(400).json({email: MESSAGES.user.email_has_used});
-            }
-            else{
-                return res.status(500).json({error: err.code});
-            }
-        });
-
+    try{
+        let docUser =await db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).get();
+        if (docUser.exists){
+            return res.status(400).json({handle: MESSAGES.user.handle_taken});
+        }
+        firebaseUserResult = await firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
+        userId = firebaseUserResult.user.uid;
+        tokenResult = await firebaseUserResult.user.getIdToken();
+        const userCredentials = {
+            handle: newUser.handle,
+            email: newUser.email,
+            createdAt: new Date().toISOString(),
+            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/react-social-network-2e7aa.appspot.com/o/no_image.jpg?alt=media',
+            userId
+        };
+        await db.doc(`/${COLLECTIONS.USERS}/${newUser.handle}`).set(userCredentials);
+        return res.status(201).json({token: tokenResult});
+    }
+    catch(err){
+        console.error(err);
+        if (err.code === 'auth/email-already-in-use'){
+            return res.status(400).json({email: MESSAGES.user.email_has_used});
+        }
+        else{
+            return res.status(500).json({error: err.code});
+        }
+    }
 };
 
-exports.login = (req,res)=>{
+exports.login = async (req,res)=>{
     const user = {
         email: req.body.email,
         password: req.body.password
     };
-
     const {valid, errors} = validateLoginData(user);
+    let firebaseAuthResult;
+    let tokenResult;
+
     if (!valid){
         return res.status(400).json(errors);
     }
-    firebase.auth().signInWithEmailAndPassword(user.email,user.password)
-        .then((data)=>{
-            console.log(data);
-            return data.user.getIdToken();
-        })
-        .then(token=>{
-            return res.json({token})
-        })
-        .catch((err)=>{
-            console.log(err);
-            if (err.code === 'auth/wrong-password'){
-                return res.status(403).json({general: 'Wrong credentials, please try again'});
-            }
-            else{
-                return res.status(500).json({error: err.code});
-            }
-        })
+    try {
+        firebaseAuthResult = await firebase.auth().signInWithEmailAndPassword(user.email,user.password);
+        tokenResult = await firebaseAuthResult.user.getIdToken();
+        return res.json({token: tokenResult});
+    } catch(err){
+        console.log(err);
+        if (err.code === 'auth/wrong-password'){
+            return res.status(403).json({general: MESSAGES.auth.wrong_credentials});
+        }
+        else{
+            return res.status(500).json({error: err.code});
+        }
+    }
 };
 
 exports.addUserDetails =(req, res)=>{
@@ -169,10 +157,9 @@ exports.uploadImage = (req,res)=>{
   });
   busboy.on('error', (err)=>{
       console.error('Busboy error', err);
-  })
+  });
 
   busboy.on('finish',()=>{
-      console.log('Done parsing form!');
       admin.storage().bucket().upload(imageToBeUploaded.filePath,{
          resumable: false,
          metadata: {
@@ -197,9 +184,10 @@ exports.getUserDetails = async (req,res)=>{
     try {
         let userDoc = await db.doc(`/${COLLECTIONS.USERS}/${req.params.handle}`).get();
         let userScreams ;
-        if (userDoc.exists){
-            userData.user = userDoc.data();
+        if (!userDoc.exists){
+            return res.status(400).json({error: MESSAGES.user.not_found});
         }
+        userData.user = userDoc.data();
         userScreams = await db.collection(COLLECTIONS.SCREAMS).where('userHandle', '==', req.params.handle).orderBy('createdAt', 'desc').get();
         userData.screams = [];
         let docElement = {};
@@ -210,6 +198,21 @@ exports.getUserDetails = async (req,res)=>{
         });
         return res.json(userData);
 
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({error: err.code});
+    }
+};
+
+exports.markNotificationRead =  async (req,res)=>{
+    try{
+        let batch = db.batch();
+        req.body.forEach(notificationId =>{
+            const notification = db.doc(`/${COLLECTIONS.NOTIFICATIONS}/${notificationId}`);
+            batch.update(notification, {read: true});
+        });
+        await batch.commit();
+        return res.json({message: MESSAGES.notifications.marked_as_read})
     }catch(err){
         console.error(err);
         return res.status(500).json({error: err.code});

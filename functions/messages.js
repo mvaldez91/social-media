@@ -13,7 +13,8 @@ const MESSAGES = {
           email_has_used: 'This email has already used',
             image_uploaded: 'Image uploaded successfully',
             wrong_file_type: 'Wrong file type submitted',
-            details_updated: 'Details added successfully'
+            details_updated: 'Details added successfully',
+            not_found: 'User not found!'
         },
         generic: {
           server_error: 'something went wrong!'
@@ -21,7 +22,11 @@ const MESSAGES = {
         auth: {
           not_authorized: 'Not authorized',
             no_token: 'No token found',
-            error_token:'Error while verifying token'
+            error_token:'Error while verifying token',
+            wrong_credentials: 'Wrong credentials, please try again'
+        },
+        notifications: {
+          marked_as_read: 'Notifications marked read'
         }
     },
     ES: {}

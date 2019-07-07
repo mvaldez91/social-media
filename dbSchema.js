@@ -5,7 +5,8 @@ let db = {
             body: 'This is the screen body',
             createdAt: 'YYYY-MM-DDTHH:MM:SS',
             likeCount: 5,
-            commentCount: 2
+            commentCount: 2,
+            userImage : ''
         }
     ],
     comments: [
