@@ -15,8 +15,11 @@ exports.getAllScreams = async (req,res)=>{
     try {
         const screamsDocs = await db.collection(COLLECTIONS.SCREAMS).orderBy('createdAt', 'desc').get();
         const preparedData = [];
+        let element = {};
         screamsDocs.forEach(doc=>{
-            preparedData.push(doc.data());
+            element = doc.data();
+            element.screamId = doc.id;
+            preparedData.push(element);
         });
         return res.json(preparedData);
     } catch(err){
