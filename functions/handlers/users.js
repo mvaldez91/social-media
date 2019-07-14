@@ -1,4 +1,3 @@
-
 const {CONFIG,LANG} = require('../util/config');
 const MESSAGES = require('../messages')[LANG];
 const {validateSignupData,validateLoginData} = require('../util/validators');
@@ -76,7 +75,7 @@ exports.login = async (req,res)=>{
         tokenResult = await firebaseAuthResult.user.getIdToken();
         return res.json({token: tokenResult});
     } catch(err){
-        console.log(err);
+        console.error(err);
         if (err.code === 'auth/wrong-password'){
             return res.status(403).json({general: MESSAGES.auth.wrong_credentials});
         }
@@ -88,7 +87,6 @@ exports.login = async (req,res)=>{
 
 exports.addUserDetails =(req, res)=>{
     let userDetails = reduceUserDetails(req.body);
-
     db.doc(`/${COLLECTIONS.USERS}/${req.user.handle}`)
         .update(userDetails)
         .then(()=>{
@@ -112,7 +110,7 @@ exports.getAuthenticatedUser = async (req,res)=>{
         }
         userData.credentials = userDoc.data();
         likesCollection = await db.collection(`${COLLECTIONS.LIKES}`).where('userHandle', '==', req.user.handle).get();
-        console.log(likesCollection);
+        
         userData.likes = [];
         likesCollection.forEach(doc=>{
             userData.likes.push(doc.data());
@@ -151,7 +149,6 @@ exports.uploadImage = (req,res)=>{
      const imageExtension =fileName.split('.')[fileName.split('.').length - 1];
      imageFileName = `${Math.round(Math.random() * 10000000)}.${imageExtension}`;
      const filePath = path.join(os.tmpdir(), imageFileName);
-      console.log('File reading', filePath);
      imageToBeUploaded = {filePath, mimetype};
      file.pipe(fs.createWriteStream(filePath));
   });
@@ -221,12 +218,13 @@ exports.markNotificationRead =  async (req,res)=>{
 
 const reduceUserDetails = (data)=>{
     let userDetails = {};
-    if (!isEmpty(data.bio.trim())){
-        userDetails.bio = data.bio;
+    console.log('Reduce user', data);
+    if (!isEmpty(data.bio)){
+        userDetails.bio = data.bio.trim();
     }
-    if (!isEmpty(data.website.trim())){
+    if (!isEmpty(data.website)){
         userDetails.website = data.website.trim();
     }
-    userDetails.location = !isEmpty(data.location.trim()) ? data.location : '';
+    userDetails.location = !isEmpty(data.location) ? data.location : '';
     return userDetails;
 };
