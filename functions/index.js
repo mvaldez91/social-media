@@ -19,7 +19,7 @@ app.post('/scream', FBAuth, postOneScream );
 app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
 app.get('/scream/:screamId/like', FBAuth, likeOnScream);
 app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
-app.delete('/scream/:screamId', deleteScream);
+app.delete('/scream/:screamId',FBAuth, deleteScream);
 
 //Signup route
 app.post('/signup', userSignUp);
@@ -28,7 +28,7 @@ app.post('/login', login);
 app.post('/user/image', FBAuth, uploadImage);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-app.get('/user/:handle', getUserDetails);
+app.get('/user/:handle', FBAuth, getUserDetails);
 app.post('/notifications', FBAuth, markNotificationRead);
 
 
