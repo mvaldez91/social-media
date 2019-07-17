@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const {db} = require('./util/admin');
+const cors = require('cors');
 require('dotenv').config();
 
 const {getAllScreams, postOneScream,getScream,
@@ -10,10 +11,11 @@ const {userSignUp, login, uploadImage,
        getUserDetails, markNotificationRead} = require('./handlers/users');
 const {FBAuth} = require('./util/FBAuth');
 
-const app = require('express')();
 
+const app = require('express')();
+app.use(cors());
 //screams routes
-app.get('/scream', FBAuth, getAllScreams);
+app.get('/scream', getAllScreams);
 app.get('/scream/:screamId', FBAuth, getScream);
 app.post('/scream', FBAuth, postOneScream );
 app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
